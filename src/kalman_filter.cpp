@@ -4,12 +4,12 @@ using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
 KalmanFilter::KalmanFilter() {
-    x_ = VectorXd(4);
-    P_ = MatrixXd(4, 4);
-    //R = Allocated in FusionEKF Constructor
-    //H = Allocated in FusionEKF Constructor
-    F_ = MatrixXd(4, 4);
-    Q_ = MatrixXd(4, 4);
+    x_ = VectorXd(4);       // State Vector x
+    P_ = MatrixXd(4, 4);    // State Covariance Matrix P
+    //H = Allocated in FusionEKF Constructor    // Measurement Matrix H
+    //R = Allocated in FusionEKF Constructor    // Measurement Covariance R
+    F_ = MatrixXd(4, 4);    // State Transition (aka Process?) Matrix F
+    Q_ = MatrixXd(4, 4);    // Process Covariance Matrix Q
 }
 
 KalmanFilter::~KalmanFilter() {}
@@ -26,7 +26,7 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 
 void KalmanFilter::Predict() {
   /**
-  TODO: Done. Do we need '@param delta_T Time between k and k+1 in seconds'?
+  TODO: Done.
     * predict the state
   */
   x_ = F_ * x_;

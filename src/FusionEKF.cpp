@@ -81,7 +81,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
-    previous_timestamp_ = true;
+    previous_timestamp_ = measurement_pack.timestamp_;
     return;
   }
 
@@ -90,12 +90,31 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    ****************************************************************************/
 
   /**
-   TODO:
-     * Update the state transition matrix F according to the new elapsed time.
-      - Time is measured in seconds.
+   TODO: (done)
+     * Update the state transition matrix F according to the new elapsed time. (done)
+      - Time is measured in seconds. (done)
      * Update the process noise covariance matrix.
-     * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
+     * Use noise_ax = 9 and noise_ay = 9 for your Q matrix. (done)
    */
+  // compute the time elapsed between the current and previous measurements
+  // dt - expressed in seconds
+  float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
+  previous_timestamp_ = measurement_pack.timestamp_;
+
+  ekf_.F_ << 1, 0, dt, 0,
+             0, 1, 0, dt,
+             0, 0, 1,  0,
+             0, 0, 0,  1;
+
+  // TODO(Manav): Uncecessary; Why doesn't this work with instance variables?!
+  // Used in Process Covariance Matrix Q
+  int noise_ax_ = 9;
+  int noise_ay_ = 9;
+
+  ekf_.Q_ << pow(dt, 4)/4*noise_ax_, 0, pow(dt, 3)/2*noise_ax_, 0,
+             0, pow(dt, 4)/4*noise_ay_, 0, pow(dt, 3)/2*noise_ay_,
+             pow(dt, 3)/2*noise_ax_, 0, pow(dt, 2)*noise_ax_, 0,
+             0, pow(dt, 3)/2*noise_ay_, 0, pow(dt, 2)*noise_ay_;
 
   ekf_.Predict();
 
