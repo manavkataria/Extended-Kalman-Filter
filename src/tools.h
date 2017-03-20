@@ -15,7 +15,16 @@ public:
   */
   virtual ~Tools();
 
+    double wrapMax(double x, double max);
+
+    double wrapMinMax(double x, double min, double max);
+
   /**
+    * A helper method to calculate RMSE.
+    */
+  Eigen::VectorXd CalculateHNonLinear(const Eigen::VectorXd& x_state);
+
+    /**
   * A helper method to calculate RMSE.
   */
   Eigen::VectorXd CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations, const std::vector<Eigen::VectorXd> &ground_truth);

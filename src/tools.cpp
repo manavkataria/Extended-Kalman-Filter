@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tools.h"
+#include <math.h>
 
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
@@ -8,6 +9,7 @@ using std::vector;
 Tools::Tools() {}
 
 Tools::~Tools() {}
+
 
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
                               const vector<VectorXd> &ground_truth) {
@@ -71,4 +73,42 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     }
 
     return Hj;
+}
+
+
+VectorXd Tools::CalculateHNonLinear(const VectorXd& x_state) {
+    //recover state parameters
+    float px = x_state(0);
+    float py = x_state(1);
+    float vx = x_state(2);
+    float vy = x_state(3);
+
+    VectorXd h_non_linear (3);
+    h_non_linear << 0,0,0;
+
+    if (px == 0) {
+        throw std::logic_error("Division by zero in CalculateHNonLinear");
+    }
+
+    //compute the polar coordinates
+    float px2py2 = px*px + py*py;
+    h_non_linear(0) =  sqrt(px2py2);
+    h_non_linear(1) = (px != 0 ? atan(py/px) : M_PI/2);
+    h_non_linear(2) = (px2py2 != 0 ? (px * vx + py * vy) / (sqrt(px2py2)) : INFINITY);
+    return h_non_linear;
+}
+
+// From: http://stackoverflow.com/a/29871193/1321129
+/* change to `float/fmodf` or `long double/fmodl` or `int/%` as appropriate */
+/* wrap x -> [0,max) */
+double Tools::wrapMax(double x, double max)
+{
+    /* integer math: `(max + x % max) % max` */
+    return fmod(max + fmod(x, max), max);
+}
+
+/* wrap x -> [min,max) */
+double Tools::wrapMinMax(double x, double min, double max)
+{
+    return min + wrapMax(x - min, max - min);
 }

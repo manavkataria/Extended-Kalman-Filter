@@ -134,13 +134,11 @@ int main(int argc, char* argv[]) {
   //Call the EKF-based fusion
   size_t N = measurement_pack_list.size();
 
-  // TODO(Manav): Kill ShortCircuit
-  N = 2;
-
 
   for (size_t k = 0; k < N; ++k) {
     // start filtering from the second frame (the speed is unknown in the first
     // frame)
+    cout << "Measurement Number: " << k << endl;
     fusionEKF.ProcessMeasurement(measurement_pack_list[k]);
 
     // output the estimation
@@ -158,8 +156,8 @@ int main(int argc, char* argv[]) {
       // output the estimation in the cartesian coordinates
       float ro = measurement_pack_list[k].raw_measurements_(0);
       float phi = measurement_pack_list[k].raw_measurements_(1);
-      out_file_ << ro * cos(phi) << "\t"; // p1_meas
-      out_file_ << ro * sin(phi) << "\t"; // ps_meas
+      out_file_ << ro * cos(phi) << "\t";
+      out_file_ << ro * sin(phi) << "\t";
     }
 
     // output the ground truth packages
