@@ -30,7 +30,7 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 
 void KalmanFilter::Predict() {
   /*
-   * TODO: This works for Laser; What about Radar x_? It does but estimates a Cartesian State.
+   * QUESTION(Manav): This works for Laser; What about Radar x_? It does but estimates a Cartesian State.
    * predict the state
    */
   x_ = F_ * x_;

@@ -26,6 +26,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     //  * the estimation vector size should equal ground truth vector size
     if ((estimations.size() != ground_truth.size()) || (estimations.size() == 0)) {
         // cout << "Exception! Invalid estimations: " << estimations;
+        throw std::invalid_argument( "Error: Estimation vector of invalid size");
         return rmse;
     }
 
@@ -86,15 +87,11 @@ VectorXd Tools::CalculateHNonLinear(const VectorXd& x_state) {
     VectorXd h_non_linear (3);
     h_non_linear << 0,0,0;
 
-    if (px == 0) {
-        throw std::logic_error("Division by zero in CalculateHNonLinear");
-    }
-
     //compute the polar coordinates
     float px2py2 = px*px + py*py;
     h_non_linear(0) =  sqrt(px2py2);
     h_non_linear(1) = (px != 0 ? atan(py/px) : M_PI/2);
-    h_non_linear(2) = (px2py2 != 0 ? (px * vx + py * vy) / (sqrt(px2py2)) : INFINITY);
+    h_non_linear(2) = (px2py2 != 0 ? (px * vx + py * vy) / (sqrt(px2py2)) : 0);
     return h_non_linear;
 }
 
