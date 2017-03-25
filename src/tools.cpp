@@ -70,7 +70,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
         float px2py2 = px*px + py*py;
         Hj << px/(sqrt(px2py2)), py/(sqrt(px2py2)), 0, 0,
                 -py/(px2py2), px/px2py2, 0, 0,
-                py*(vx*py-vy*px)/pow(px2py2, 3/2), px*(vy*px-vx*py)/pow(px2py2, 3/2), px/sqrt(px2py2), py/sqrt(px2py2);
+                py*(vx*py-vy*px)/pow(px2py2, 1.5), px*(vy*px-vx*py)/pow(px2py2, 1.5), px/sqrt(px2py2), py/sqrt(px2py2);
     }
 
     return Hj;
